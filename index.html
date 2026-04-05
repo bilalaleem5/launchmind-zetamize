@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZetaMize AI Sales OS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .hero {
+            background-image: linear-gradient(to bottom, #ff69b4, #ffe6cc);
+            color: #ffffff;
+            padding: 100px;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: 36px;
+        }
+        .features {
+            padding: 50px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .feature {
+            background-color: #f7f7f7;
+            padding: 20px;
+            margin: 10px;
+            width: calc(33.33% - 20px);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .feature h2 {
+            font-size: 24px;
+            margin-top: 0;
+        }
+        .cta {
+            background-color: #4CAF50;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .cta:hover {
+            background-color: #3e8e41;
+        }
+        .testimonials {
+            padding: 50px;
+            text-align: center;
+        }
+        .testimonials blockquote {
+            font-size: 18px;
+            margin: 0 auto;
+            width: 50%;
+        }
+        .contact-form {
+            padding: 20px;
+            background-color: #f7f7f7;
+            border: 1px solid #dddddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            width: 50%;
+        }
+        .contact-form label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        .contact-form input, .contact-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #cccccc;
+        }
+        .contact-form button {
+            background-color: #4CAF50;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .contact-form button:hover {
+            background-color: #3e8e41;
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <h1>ZetaMize AI Sales OS</h1>
+        <p>Helping sales teams and managers increase sales efficiency and revenue growth by leveraging AI-driven lead generation, automated sales forecasting, and personalized customer engagement</p>
+    </section>
+    <section class="features">
+        <div class="feature">
+            <h2>AI-Driven Lead Generation</h2>
+            <p>Utilizes machine learning algorithms to identify and qualify high-potential leads based on customer data and behavior</p>
+        </div>
+        <div class="feature">
+            <h2>Automated Sales Forecasting</h2>
+            <p>Leverages predictive analytics to forecast sales performance and provide real-time insights into sales trends and pipeline health</p>
+        </div>
+        <div class="feature">
+            <h2>Personalized Customer Engagement</h2>
+            <p>Uses natural language processing and customer data to create tailored communication and content recommendations for sales reps</p>
+        </div>
+        <div class="feature">
+            <h2>Sales Performance Dashboard</h2>
+            <p>Provides a centralized platform for sales reps and managers to track key performance metrics, such as sales activity, pipeline growth, and customer engagement</p>
+        </div>
+        <div class="feature">
+            <h2>Integrations with CRM and Marketing Automation Tools</h2>
+            <p>Seamlessly integrates with popular CRM and marketing automation tools to streamline data management and workflow</p>
+        </div>
+    </section>
+    <section>
+        <button class="cta">Get Started</button>
+    </section>
+    <section class="testimonials">
+        <blockquote>"ZetaMize AI Sales OS has been a game-changer for our sales team. The AI-driven lead generation and automated sales forecasting have helped us increase our sales efficiency and revenue growth." - Emily Chen, Sales Representative</blockquote>
+        <blockquote>"The personalized customer engagement feature has been incredibly helpful in creating tailored communication and content recommendations for our sales reps." - David Lee, Sales Manager</blockquote>
+        <blockquote>"The sales performance dashboard has provided us with real-time insights into sales trends and pipeline health, allowing us to make data-driven decisions to optimize sales performance." - Rachel Patel, Sales Operations Manager</blockquote>
+    </section>
+    <section>
+        <form class="contact-form">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name"><br><br>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email"><br><br>
+            <label for="message">Message:</label>
+            <textarea id="message" name="message"></textarea><br><br>
+            <button type="submit">Submit</button>
+        </form>
+    </section>
+    <script>
+        // Simple form submission handler
+        const form = document.querySelector('.contact-form');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Send request to CRM for lead capture
+            console.log('Form submitted');
+        });
+    </script>
+</body>
+</html>
