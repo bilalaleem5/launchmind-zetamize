@@ -1,0 +1,134 @@
+<html>
+<head>
+  <title>ZetaMize AI Sales OS</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .hero {
+      background-image: linear-gradient(to bottom, #4CAF50, #3e8e41);
+      color: #fff;
+      padding: 50px;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .feature {
+      margin: 20px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: calc(33.33% - 40px);
+    }
+    .feature h2 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    .cta {
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .cta:hover {
+      background-color: #3e8e41;
+    }
+    .metrics-dashboard {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .metric {
+      margin: 20px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: calc(33.33% - 40px);
+    }
+    .metric h2 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="hero">
+      <h1>ZetaMize AI Sales OS</h1>
+      <p>AI-driven sales operating system designed for high-end sales teams and managers to increase sales productivity and revenue growth through automation and data-driven insights</p>
+    </div>
+    <h2>Features</h2>
+    <div class="features">
+      <div class="feature">
+        <h2>AI-Driven Sales Forecasting</h2>
+        <p>Utilizes machine learning algorithms to analyze historical sales data and provide accurate predictions of future sales performance</p>
+      </div>
+      <div class="feature">
+        <h2>Automated Sales Workflow Management</h2>
+        <p>Streamlines sales processes and tasks, automating routine activities and freeing up time for more strategic sales work</p>
+      </div>
+      <div class="feature">
+        <h2>Real-Time Sales Analytics and Insights</h2>
+        <p>Provides instant access to key sales metrics and performance indicators, enabling data-driven decision-making and optimization</p>
+      </div>
+      <div class="feature">
+        <h2>Personalized Sales Recommendations</h2>
+        <p>Uses AI to analyze customer data and provide tailored sales recommendations and suggestions for improvement</p>
+      </div>
+      <div class="feature">
+        <h2>Integration with Existing Sales Tools</h2>
+        <p>Seamlessly integrates with popular sales software and systems, ensuring a unified and efficient sales workflow</p>
+      </div>
+    </div>
+    <h2>Interactive Sales Metrics Dashboard</h2>
+    <div class="metrics-dashboard">
+      <div class="metric">
+        <h2>Sales Revenue</h2>
+        <p>$100,000</p>
+      </div>
+      <div class="metric">
+        <h2>Sales Growth</h2>
+        <p>10%</p>
+      </div>
+      <div class="metric">
+        <h2>Sales Productivity</h2>
+        <p>20%</p>
+      </div>
+    </div>
+    <button class="cta">Get Started</button>
+  </div>
+  <script>
+    // Add interactivity to the metrics dashboard
+    const metrics = document.querySelectorAll('.metric');
+    metrics.forEach((metric) => {
+      metric.addEventListener('click', () => {
+        // Toggle the metric's content
+        metric.querySelector('p').textContent = Math.floor(Math.random() * 100) + '%';
+      });
+    });
+  </script>
+</body>
+</html>
