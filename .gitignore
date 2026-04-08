@@ -1,0 +1,32 @@
+__pycache__/
+archive/
+.omx/
+.clawd-agents/
+# Claude Code local artifacts
+.claude/settings.local.json
+.claude/sessions/
+
+# Environment & secrets — NEVER commit these
+.env
+*.env
+
+# Python cache
+*.pyc
+*.pyo
+*.pyd
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+ai-sales-system/data/
+
+# Output/log files
+ai-sales-system/output.txt
+ai-sales-system/out.txt
+ai-sales-system/error_log.txt
+ai-sales-system/fidelity_output.txt
+
+# OS files
+.DS_Store
+Thumbs.db

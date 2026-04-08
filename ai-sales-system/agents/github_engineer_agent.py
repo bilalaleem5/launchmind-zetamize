@@ -1,0 +1,182 @@
+"""
+GitHub Engineer Agent — Generates HTML and creates real PRs via GitHub API.
+Assignment constraint: Must use raw HTTP calls (e.g. requests), not Octokit/PyGithub.
+"""
+import base64
+import json
+import os
+import sys
+import uuid
+import requests
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from agents.message_bus import send_message, get_latest_message
+from agents.ui_utils import print_step, typing_print, print_status_update
+import config
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+AGENT = "engineer"
+GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
+REPO = os.environ.get("GITHUB_REPO", "bilalaleem5/launchmind-zetamize")
+
+
+def _llm(prompt: str) -> str:
+    print_step("engineer", "Architecting Interface (Llama 3)")
+    headers = {
+        "Authorization": f"Bearer {config.OPENROUTER_KEY}",
+        "Content-Type": "application/json"
+    }
+    data = {"model": "meta-llama/llama-3.3-70b-instruct", "messages": [{"role": "user", "content": prompt}]}
+    r = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=data)
+    return r.json()["choices"][0]["message"]["content"].strip()
+
+
+class GitHubEngineerAgent:
+    def _generate_html(self, spec: dict, focus: str = "") -> str:
+        prompt = f"""You are a Frontend Engineer. Based on this product spec:
+{json.dumps(spec, indent=2)}
+
+{focus}
+
+Generate a complete, stunning, single-file HTML landing page (with embedded CSS in <style>).
+It must include:
+1. A hero section with the value proposition
+2. A features section
+3. A CTA button
+Modern, clean design (e.g., sans-serif fonts, good padding, nice colors).
+
+Return ONLY the raw HTML code. Do NOT wrap it in ```html markdown fences."""
+        response = _llm(prompt)
+        # Strip markdown fences if LLM adds them despite instructions
+        if response.startswith("```html"):
+            response = response[7:]
+        if response.endswith("```"):
+            response = response[:-3]
+        return response.strip()
+
+    def _create_github_issue(self, spec: dict) -> str:
+        if not GITHUB_TOKEN:
+            return "https://github.com/simulated/issue/1"
+        headers = {"Authorization": f"token {GITHUB_TOKEN}", "Accept": "application/vnd.github+json"}
+        issue_title = "Initial landing page"
+        issue_body = f"Automatically generated issue to build the landing page according to the following specs:\n\n{json.dumps(spec, indent=2)}"
+        r = requests.post(f"https://api.github.com/repos/{REPO}/issues", headers=headers, json={"title": issue_title, "body": issue_body})
+        if r.status_code == 201:
+            url = r.json().get("html_url")
+            print(f"   🐙 GitHub Issue Created: {url}")
+            return url
+        else:
+            print(f"❌ GitHub API Error (Create Issue): {r.text}")
+            return "https://github.com/error"
+
+    def _github_commit(self, html_content: str) -> str:
+        if not GITHUB_TOKEN:
+            print("⚠️ [ENGINEER] Warning: GITHUB_TOKEN not found in environment. Skipping real API call.")
+            return "https://github.com/simulated/pull/1"
+
+        headers = {
+            "Authorization": f"token {GITHUB_TOKEN}",
+            "Accept": "application/vnd.github+json"
+        }
+        
+        # 1. Get base SHA for 'main'
+        r = requests.get(f"https://api.github.com/repos/{REPO}/git/refs/heads/main", headers=headers)
+        if r.status_code != 200:
+            print(f"❌ GitHub API Error (Get Ref): {r.text}")
+            return "https://github.com/error"
+        base_sha = r.json()["object"]["sha"]
+
+        # 2. Create new branch
+        branch_name = f"agent-landing-page-{str(uuid.uuid4())[:8]}"
+        r = requests.post(
+            f"https://api.github.com/repos/{REPO}/git/refs",
+            headers=headers,
+            json={"ref": f"refs/heads/{branch_name}", "sha": base_sha}
+        )
+        if r.status_code != 201:
+            print(f"❌ GitHub API Error (Create Branch): {r.text}")
+            return "https://github.com/error"
+
+        # 3. Commit file
+        content_b64 = base64.b64encode(html_content.encode("utf-8")).decode("utf-8")
+        r = requests.put(
+            f"https://api.github.com/repos/{REPO}/contents/index.html",
+            headers=headers,
+            json={
+                "message": "feat: Add initial landing page via autonomous Engineer Agent",
+                "content": content_b64,
+                "branch": branch_name,
+                "committer": {"name": "EngineerAgent", "email": "agent@launchmind.ai"}
+            }
+        )
+        if r.status_code not in [200, 201]:
+            print(f"❌ GitHub API Error (Commit File): {r.text}")
+            return "https://github.com/error", ""
+            
+        commit_sha = r.json().get("commit", {}).get("sha", "")
+
+        # 4. Open Pull Request
+        pr_title = "Automated PR: Initial Landing Page"
+        pr_body = "This PR was automatically generated by the Engineer Agent based on the Product Spec."
+        r = requests.post(
+            f"https://api.github.com/repos/{REPO}/pulls",
+            headers=headers,
+            json={"title": pr_title, "body": pr_body, "head": branch_name, "base": "main"}
+        )
+        if r.status_code == 201:
+            pr_url = r.json().get("html_url")
+            print(f"   🐙 GitHub PR Created Successfully: {pr_url}")
+            return pr_url, commit_sha
+        else:
+            print(f"❌ GitHub API Error (Open PR): {r.text}")
+            return "https://github.com/error", ""
+
+    def run(self, spec: dict) -> dict:
+        print_step("engineer", "Building Startup Infrastructure")
+        
+        # Check task input
+        msg = get_latest_message(AGENT, "task")
+        instruction = msg["payload"].get("instruction", "") if msg else ""
+
+        # Step 1: Create GitHub Issue
+        issue_url = self._create_github_issue(spec)
+
+        # Step 2: Write Code
+        html = self._generate_html(spec, focus=f"Additional instruction: {instruction}")
+        print_status_update(f"HTML Landing page generated ({len(html)} bytes).")
+
+        # Step 3: Push to GitHub
+        pr_url, commit_sha = self._github_commit(html)
+
+        result = {
+            "html": html,
+            "pr_url": pr_url,
+            "commit_sha": commit_sha,
+            "issue_url": issue_url
+        }
+
+        # Send result back to CEO
+        send_message(AGENT, "ceo", "result", result)
+        print(f"   ✅ Code shipped.")
+        return result
+
+    def revise(self, spec: dict, issues: list) -> dict:
+        """Revise HTML based on QA feedback."""
+        print(f"\n🔄 [ENGINEER AGENT] Revising HTML based on QA feedback...")
+        focus = "FIX THESE BUGS:\n" + "\n".join(f"- {iss}" for iss in issues)
+        html = self._generate_html(spec, focus=focus)
+        
+        # Push revised PR (creating a new branch for simplicity)
+        pr_url, commit_sha = self._github_commit(html)
+        
+        result = {
+            "html": html,
+            "pr_url": pr_url,
+            "commit_sha": commit_sha
+        }
+        return result

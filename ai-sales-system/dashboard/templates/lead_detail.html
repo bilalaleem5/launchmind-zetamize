@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lead Detail — ZetaMize SDR</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0b0f;--bg2:#13141a;--bg3:#1a1c25;--border:#2a2d3e;--accent:#6c63ff;--accent2:#00d4ff;--success:#00e5a0;--warning:#ffb347;--danger:#ff4757;--text:#e8eaf6;--text2:#9095b0;--text3:#5a5f7a;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;}
+  nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;height:60px;gap:32px;position:sticky;top:0;z-index:100;}
+  .nav-brand{font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  nav a{color:var(--text2);text-decoration:none;font-size:14px;font-weight:500;padding:6px 12px;border-radius:8px;transition:all .2s;}
+  nav a:hover{color:var(--text);background:var(--bg3);}
+  .container{max-width:1100px;margin:0 auto;padding:24px;}
+  .back-link{color:var(--accent);text-decoration:none;font-size:13px;display:inline-flex;align-items:center;gap:6px;margin-bottom:20px;}
+  .header-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;flex-wrap:wrap;gap:16px;}
+  .lead-title h1{font-size:26px;font-weight:800;}
+  .lead-title p{color:var(--text2);font-size:14px;margin-top:4px;}
+  .badge{display:inline-flex;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500;}
+  .badge-new{background:rgba(108,99,255,.15);color:var(--accent);}
+  .badge-contacted{background:rgba(0,212,255,.15);color:var(--accent2);}
+  .badge-replied{background:rgba(255,179,71,.15);color:var(--warning);}
+  .badge-meeting_booked{background:rgba(0,229,160,.15);color:var(--success);}
+  .badge-closed_won{background:rgba(0,229,160,.2);color:var(--success);}
+  .badge-closed_lost{background:rgba(255,71,87,.1);color:var(--danger);}
+  .badge-cold,.badge-researched{background:rgba(90,95,122,.15);color:var(--text2);}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px;}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+  @media(max-width:800px){.grid-3,.grid-2{grid-template-columns:1fr;}}
+  .card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:18px;}
+  .card-title{font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;font-weight:600;margin-bottom:14px;}
+  .info-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;}
+  .info-row:last-child{border-bottom:none;}
+  .info-label{color:var(--text2);}
+  .info-val{color:var(--text);font-weight:500;text-align:right;max-width:200px;word-break:break-all;}
+  .info-val a{color:var(--accent);text-decoration:none;}
+  .pill{display:inline-flex;padding:2px 8px;border-radius:12px;background:rgba(108,99,255,.1);color:var(--accent);font-size:11px;margin:2px;}
+  .score-big{font-size:36px;font-weight:800;color:var(--accent);}
+  .score-bar{display:flex;gap:4px;margin-top:8px;}
+  .s-dot{height:6px;border-radius:3px;flex:1;}
+  .msg-item{padding:14px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;font-size:13px;}
+  .msg-meta{display:flex;gap:12px;margin-bottom:8px;font-size:11px;color:var(--text3);}
+  .msg-meta .ch{color:var(--accent2);}
+  .msg-body{color:var(--text2);line-height:1.6;white-space:pre-wrap;}
+  select.stage-sel{background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px 12px;font-size:13px;font-family:'Inter',sans-serif;outline:none;width:100%;}
+  textarea.notes-inp{background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px 12px;font-size:13px;font-family:'Inter',sans-serif;outline:none;width:100%;height:80px;resize:vertical;margin-top:8px;}
+  input.dt-inp{background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px 12px;font-size:13px;font-family:'Inter',sans-serif;outline:none;width:100%;margin-top:8px;}
+  .btn-save{background:var(--accent);color:#fff;border:none;padding:9px 20px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;margin-top:12px;width:100%;}
+  .btn-save:hover{background:#5a52e0;}
+  .fu-item{padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;margin-bottom:8px;font-size:13px;display:flex;justify-content:space-between;align-items:center;}
+  .fu-done{opacity:.4;}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-brand">🤖 ZetaMize SDR</div>
+  <a href="/">Dashboard</a><a href="/pipeline">Pipeline</a>
+  <a href="/leads">Leads</a><a href="/products">Products</a><a href="/logs">Logs</a>
+</nav>
+<div class="container">
+  <a href="/leads" class="back-link">← Back to Leads</a>
+  <div class="header-row">
+    <div class="lead-title">
+      <h1>{{ lead.company }}</h1>
+      <p>{{ lead.industry or '' }} {% if lead.city %}• {{ lead.city }}{% endif %} • Source: {{ lead.source or 'manual' }}</p>
+    </div>
+    <span class="badge badge-{{ lead.status }}">{{ lead.status }}</span>
+  </div>
+
+  <div class="grid-3">
+    <!-- Contact Info -->
+    <div class="card">
+      <div class="card-title">Contact Info</div>
+      <div class="info-row"><span class="info-label">Email</span><span class="info-val">{{ lead.email or '—' }}</span></div>
+      <div class="info-row"><span class="info-label">Phone</span><span class="info-val">{{ lead.phone or '—' }}</span></div>
+      <div class="info-row"><span class="info-label">WhatsApp</span><span class="info-val" style="color:{% if lead.wa_valid %}var(--success){% else %}var(--text3){% endif %}">{% if lead.wa_valid %}✅ Valid{% else %}Not checked{% endif %}</span></div>
+      <div class="info-row"><span class="info-label">Website</span><span class="info-val"><a href="{{ lead.website }}" target="_blank">{{ (lead.website or '')[:30] }}</a></span></div>
+      <div class="info-row"><span class="info-label">Address</span><span class="info-val">{{ lead.address or '—' }}</span></div>
+    </div>
+
+    <!-- AI Research -->
+    <div class="card">
+      <div class="card-title">AI Research</div>
+      <div style="text-align:center;padding:10px 0">
+        <div class="score-big">{{ lead.fit_score or '?' }}</div>
+        <div style="color:var(--text3);font-size:12px;margin-top:2px">Fit Score / 10</div>
+        <div class="score-bar">
+          {% for i in range(10) %}<div class="s-dot" style="background:{% if lead.fit_score and i < lead.fit_score %}var(--accent){% else %}var(--border){% endif %}"></div>{% endfor %}
+        </div>
+      </div>
+      {% if pain_points %}
+      <div style="margin-top:14px">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px;text-transform:uppercase;">Pain Points</div>
+        {% for pp in pain_points %}<span class="pill">{{ pp }}</span>{% endfor %}
+      </div>
+      {% endif %}
+      {% if research.recommended_service %}
+      <div class="info-row" style="margin-top:12px"><span class="info-label">Best Service</span><span class="info-val" style="color:var(--accent2)">{{ research.recommended_service }}</span></div>
+      {% endif %}
+      {% if research.fit_reason %}
+      <div style="margin-top:12px;font-size:12px;color:var(--text2);line-height:1.5;background:var(--bg3);border-radius:8px;padding:10px">{{ research.fit_reason }}</div>
+      {% endif %}
+    </div>
+
+    <!-- Update Stage -->
+    <div class="card">
+      <div class="card-title">Update Pipeline Stage</div>
+      <form method="POST" action="/lead/{{ lead.id }}/update">
+        <select name="stage" class="stage-sel">
+          {% for s in ['new','researched','contacted','replied','meeting_booked','closed_won','closed_lost','cold'] %}
+          <option value="{{ s }}" {% if lead.status==s %}selected{% endif %}>{{ s.replace('_',' ').title() }}</option>
+          {% endfor %}
+        </select>
+        <textarea name="notes" class="notes-inp" placeholder="Notes...">{{ lead.notes or '' }}</textarea>
+        <input type="text" name="meeting_at" class="dt-inp" placeholder="Meeting datetime (e.g. 2026-04-10 14:00)">
+        <button type="submit" class="btn-save">💾 Save Stage</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <!-- Outreach History -->
+    <div class="card">
+      <div class="card-title">📤 Outreach History ({{ outreach|length }})</div>
+      {% for o in outreach %}
+      <div class="msg-item">
+        <div class="msg-meta">
+          <span class="ch">{{ '✉️' if o.channel=='email' else '📱' }} {{ o.channel }}</span>
+          <span>{{ o.sent_at[:16] }}</span>
+          <span style="color:{% if o.status=='sent' %}var(--success){% else %}var(--danger){% endif %}">{{ o.status }}</span>
+        </div>
+        {% if o.subject %}<div style="font-weight:600;color:var(--text);margin-bottom:6px;font-size:13px">{{ o.subject }}</div>{% endif %}
+        <div class="msg-body">{{ o.message[:400] }}{% if o.message|length > 400 %}...{% endif %}</div>
+      </div>
+      {% endfor %}
+      {% if not outreach %}<p style="color:var(--text3);font-size:13px">No outreach sent yet.</p>{% endif %}
+    </div>
+
+    <!-- Follow-ups -->
+    <div class="card">
+      <div class="card-title">🔄 Follow-ups ({{ followups|length }})</div>
+      {% for fu in followups %}
+      <div class="fu-item {% if fu.done %}fu-done{% endif %}">
+        <div>
+          <div style="font-size:12px;color:var(--accent2)">{{ '✅' if fu.done else '⏳' }} {{ fu.channel }} — Attempt #{{ fu.attempt_number }}</div>
+          <div style="font-size:11px;color:var(--text3)">Scheduled: {{ fu.scheduled_at[:16] }}</div>
+        </div>
+        <span style="font-size:11px;color:{% if fu.done %}var(--success){% else %}var(--warning){% endif %}">{{ 'Done' if fu.done else 'Pending' }}</span>
+      </div>
+      {% endfor %}
+      {% if not followups %}<p style="color:var(--text3);font-size:13px">No follow-ups scheduled.</p>{% endif %}
+    </div>
+  </div>
+</div>
+</body></html>

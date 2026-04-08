@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pipeline — ZetaMize SDR</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0b0f;--bg2:#13141a;--bg3:#1a1c25;--border:#2a2d3e;--accent:#6c63ff;--accent2:#00d4ff;--success:#00e5a0;--warning:#ffb347;--danger:#ff4757;--text:#e8eaf6;--text2:#9095b0;--text3:#5a5f7a;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;}
+  nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;height:60px;gap:32px;position:sticky;top:0;z-index:100;}
+  .nav-brand{font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  nav a{color:var(--text2);text-decoration:none;font-size:14px;font-weight:500;padding:6px 12px;border-radius:8px;transition:all .2s;}
+  nav a:hover,nav a.active{color:var(--text);background:var(--bg3);}
+  .container{max-width:100%;padding:24px;}
+  .page-title{font-size:24px;font-weight:700;margin-bottom:24px;}
+  .kanban{display:flex;gap:14px;overflow-x:auto;padding-bottom:20px;align-items:flex-start;}
+  .kanban-col{min-width:220px;max-width:240px;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px;flex-shrink:0;}
+  .col-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+  .col-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;}
+  .col-count{background:var(--bg3);padding:2px 8px;border-radius:10px;font-size:11px;color:var(--text3);}
+  .col-new{border-top:3px solid var(--accent);}
+  .col-contacted{border-top:3px solid var(--accent2);}
+  .col-replied{border-top:3px solid var(--warning);}
+  .col-meeting_booked{border-top:3px solid var(--success);}
+  .col-closed_won{border-top:3px solid var(--success);}
+  .col-closed_lost{border-top:3px solid var(--danger);}
+  .col-cold{border-top:3px solid var(--text3);}
+  .k-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;transition:all .15s;cursor:pointer;}
+  .k-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 4px 20px rgba(108,99,255,.15);}
+  .k-company{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;}
+  .k-industry{font-size:11px;color:var(--text3);}
+  .k-score{display:flex;gap:2px;margin-top:8px;}
+  .k-dot{height:3px;border-radius:2px;flex:1;}
+  .k-actions{display:flex;gap:6px;margin-top:8px;}
+  .k-btn{font-size:10px;padding:3px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text2);cursor:pointer;text-decoration:none;}
+  .k-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .col-label-new{color:var(--accent);}
+  .col-label-contacted{color:var(--accent2);}
+  .col-label-replied{color:var(--warning);}
+  .col-label-meeting_booked{color:var(--success);}
+  .col-label-closed_won{color:var(--success);}
+  .col-label-closed_lost{color:var(--danger);}
+  .col-label-cold{color:var(--text3);}
+  .empty-col{font-size:12px;color:var(--text3);text-align:center;padding:20px 0;}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-brand">🤖 ZetaMize SDR</div>
+  <a href="/">Dashboard</a>
+  <a href="/pipeline" class="active">Pipeline</a>
+  <a href="/leads">Leads</a>
+  <a href="/products">Products</a>
+  <a href="/logs">Logs</a>
+</nav>
+<div class="container">
+  <div class="page-title">Sales Pipeline — Kanban View</div>
+  <div class="kanban">
+    {% set stage_labels = {'new':'🆕 New','contacted':'📤 Contacted','replied':'💬 Replied','meeting_booked':'📅 Meeting','closed_won':'✅ Won','closed_lost':'❌ Lost','cold':'🧊 Cold'} %}
+    {% for stage in stages %}
+    <div class="kanban-col col-{{ stage }}">
+      <div class="col-header">
+        <span class="col-title col-label-{{ stage }}">{{ stage_labels[stage] }}</span>
+        <span class="col-count">{{ pipeline[stage]|length }}</span>
+      </div>
+      {% if pipeline[stage] %}
+        {% for lead in pipeline[stage] %}
+        <div class="k-card" onclick="window.location='/lead/{{ lead.id }}'">
+          <div class="k-company">{{ lead.company[:28] }}</div>
+          <div class="k-industry">{{ lead.industry or '—' }} • {{ lead.city or '—' }}</div>
+          {% if lead.fit_score %}
+          <div class="k-score">
+            {% for i in range(10) %}
+            <div class="k-dot" style="background:{% if i < lead.fit_score %}var(--accent){% else %}var(--border){% endif %}"></div>
+            {% endfor %}
+          </div>
+          {% endif %}
+          <div class="k-actions">
+            <a class="k-btn" href="/lead/{{ lead.id }}">Detail</a>
+            {% if lead.email %}<span class="k-btn" style="color:var(--accent2)">✉</span>{% endif %}
+            {% if lead.phone %}<span class="k-btn" style="color:var(--success)">📱</span>{% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-col">No leads here</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</div>
+</body></html>

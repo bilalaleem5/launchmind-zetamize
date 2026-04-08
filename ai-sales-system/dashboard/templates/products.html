@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products — ZetaMize SDR</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0b0f;--bg2:#13141a;--bg3:#1a1c25;--border:#2a2d3e;--accent:#6c63ff;--accent2:#00d4ff;--success:#00e5a0;--text:#e8eaf6;--text2:#9095b0;--text3:#5a5f7a;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;}
+  nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;height:60px;gap:32px;position:sticky;top:0;}
+  .nav-brand{font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  nav a{color:var(--text2);text-decoration:none;font-size:14px;font-weight:500;padding:6px 12px;border-radius:8px;}
+  nav a:hover,nav a.active{color:var(--text);background:var(--bg3);}
+  .container{max-width:1000px;margin:0 auto;padding:24px;}
+  .page-title{font-size:24px;font-weight:700;margin-bottom:24px;}
+  .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;}
+  .product-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px;transition:border-color .2s;}
+  .product-card:hover{border-color:var(--accent);}
+  .p-name{font-size:18px;font-weight:700;margin-bottom:6px;}
+  .p-desc{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:12px;}
+  .p-features{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+  .p-feat{background:rgba(108,99,255,.1);color:var(--accent);font-size:11px;padding:3px 10px;border-radius:12px;}
+  .p-meta{font-size:12px;color:var(--text3);border-top:1px solid var(--border);padding-top:10px;margin-top:10px;}
+  .empty{text-align:center;padding:60px;color:var(--text3);}
+  .empty h3{font-size:20px;margin-bottom:8px;}
+  .tip{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:24px;font-size:14px;color:var(--text2);line-height:1.7;}
+  .tip strong{color:var(--accent);}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-brand">🤖 ZetaMize SDR</div>
+  <a href="/">Dashboard</a><a href="/pipeline">Pipeline</a>
+  <a href="/leads">Leads</a><a href="/products" class="active">Products</a><a href="/logs">Logs</a>
+</nav>
+<div class="container">
+  <div class="page-title">Products</div>
+  <div class="tip">
+    <strong>Product Mode:</strong> Add your products here. When running the CLI and selecting <strong>Product Mode</strong>, the system will find leads specifically for each product, write targeted outreach, and track them separately in the pipeline. Use the CLI (<code>python run.py</code> → Option 9) to add products interactively.
+  </div>
+  {% if products %}
+  <div class="products-grid">
+    {% for p in products %}
+    <div class="product-card">
+      <div class="p-name">{{ p.name }}</div>
+      <div class="p-desc">{{ p.description[:150] }}</div>
+      {% if p.features %}
+      <div class="p-features">
+        {% set feats = p.features if p.features is iterable and p.features is not string else [] %}
+        {% for f in (p.features | from_json) if p.features else [] %}
+        <span class="p-feat">{{ f }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+      <div class="p-meta">
+        Target: {{ p.target_audience or '—' }} • Price: {{ p.price_range or '—' }}
+        <br>Added: {{ p.created_at[:10] }}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty">
+    <h3>📦 No products yet</h3>
+    <p>Run <code>python run.py</code> → Option 9 to add a product</p>
+  </div>
+  {% endif %}
+</div>
+</body></html>
