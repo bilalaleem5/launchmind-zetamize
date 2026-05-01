@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productivity Platform</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+       .hero {
+            background-color: #f7f7f7;
+            padding: 50px;
+            text-align: center;
+        }
+       .hero h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+       .hero p {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+       .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 50px;
+        }
+       .feature {
+            margin: 20px;
+            padding: 20px;
+            width: calc(33.33% - 40px);
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+       .feature i {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+       .feature h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+       .feature p {
+            font-size: 14px;
+        }
+       .testimonials {
+            background-color: #f7f7f7;
+            padding: 50px;
+            text-align: center;
+        }
+       .testimonial {
+            margin: 20px;
+            padding: 20px;
+            width: calc(50% - 40px);
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+       .testimonial p {
+            font-size: 14px;
+            font-style: italic;
+        }
+       .cta {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+       .cta:hover {
+            background-color: #3e8e41;
+        }
+        @media only screen and (max-width: 768px) {
+           .feature {
+                width: calc(50% - 40px);
+            }
+        }
+        @media only screen and (max-width: 480px) {
+           .feature {
+                width: 100%;
+            }
+           .testimonial {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <h1>Boost Your Productivity</h1>
+        <p>Our software development platform helps professional developers, team leads, and project managers increase productivity and streamline workflows.</p>
+        <button class="cta">Get Started</button>
+    </section>
+    <section class="features">
+        <div class="feature">
+            <i class="fas fa-tachometer-alt"></i>
+            <h2>Project Dashboard</h2>
+            <p>A centralized dashboard to view project progress, track tasks, and monitor team performance.</p>
+        </div>
+        <div class="feature">
+            <i class="fas fa-comments"></i>
+            <h2>Collaboration Tools</h2>
+            <p>Real-time commenting, @mentions, and file sharing to facilitate teamwork and communication.</p>
+        </div>
+        <div class="feature">
+            <i class="fas fa-code"></i>
+            <h2>Integration with Development Frameworks</h2>
+            <p>Seamless integration with popular frameworks like Git, Jenkins, and Jira to streamline development workflows.</p>
+        </div>
+        <div class="feature">
+            <i class="fas fa-tasks"></i>
+            <h2>Task Management</h2>
+            <p>Ability to create, assign, and track tasks with deadlines, priorities, and dependencies.</p>
+        </div>
+        <div class="feature">
+            <i class="fas fa-chart-line"></i>
+            <h2>Reporting and Analytics</h2>
+            <p>Customizable reports and analytics to track project progress, team performance, and identify areas for improvement.</p>
+        </div>
+    </section>
+    <section class="testimonials">
+        <div class="testimonial">
+            <p>"This platform has been a game-changer for our team. We're able to collaborate more effectively and deliver projects on time." - Alex Chen, Full-stack Developer</p>
+        </div>
+        <div class="testimonial">
+            <p>"I can finally see the big picture and make data-driven decisions. The reporting and analytics features are incredibly useful." - Maya Patel, Team Lead</p>
+        </div>
+        <div class="testimonial">
+            <p>"The integration with our development frameworks has streamlined our workflows and improved our overall productivity." - Rajesh Kumar, Project Manager</p>
+        </div>
+    </section>
+</body>
+</html>
